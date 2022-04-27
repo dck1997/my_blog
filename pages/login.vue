@@ -3,10 +3,10 @@
     <div class="content">
       <el-form class="form">
         <el-form-item class="flex center" label="账号：">
-          <el-input placeholder="请输入账号" size="medium" label="用户名"></el-input>
+          <el-input v-model="UserName" placeholder="请输入账号" size="medium" label="用户名"></el-input>
         </el-form-item>
         <el-form-item class="flex center" label="密码：">
-          <el-input placeholder="请输入密码" size="medium"></el-input>
+          <el-input v-model="PassWord" placeholder="请输入密码" size="medium" type="password"></el-input>
         </el-form-item>
         <el-form-item class="button">
           <el-button type="primary" @click="onSubmit" size="medium">登录</el-button>
@@ -18,15 +18,45 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data(){
     return {
-
+      UserName:'admin',
+      PassWord:'123456'
     }
   },
+  // created() {
+  //   axios
+  //     .get("http://localhost:3000/test")
+  //     .then((res) => {
+  //       this.msg = res.data;
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // },
   methods:{
     onSubmit(){
-      console.log('111')
+      axios
+      .post("http://localhost:3000/login",{
+        UserName:this.UserName,
+        PassWord:this.PassWord
+      })
+      .then((res) => {
+        console.log('res---',res.data)
+        const { code, msg } = res.data
+        if(code === 200) {
+          this.$router.push({
+            path: `/`
+          })
+        }else{
+          this.$message.error(msg)
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     }
   },
   asyncData(){

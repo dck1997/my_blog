@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name:'NuxtArticle',
   data(){
@@ -86,6 +88,23 @@ export default {
         },
       ]
     }
+  },
+  mounted(){
+    axios
+      .get("http://localhost:3000/article?SkipCounts=0&MaxCounts=10")
+      .then((res) => {
+        console.log('res---',res.data)
+        const { code, msg } = res.data
+        if(code === 200) {
+            this.articleList = res.data.data
+            console.log(this.articleList)
+        }else{
+          this.$message.error(msg)
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
 </script>
